@@ -168,7 +168,7 @@ LZ4IO_prefs_t* LZ4IO_defaultPreferences(void)
     ret->blockSize = 0;
     ret->blockChecksum = 0;
     ret->streamChecksum = 1;
-    ret->blockIndependence = 1;
+    ret->blockIndependence = 1;//默认1
     ret->sparseFileSupport = 1;
     ret->contentSizeFlag = 0;
     ret->useDictionary = 0;
@@ -659,6 +659,7 @@ LZ4IO_compressFilename_extRess(cRess_t ress,
     const size_t dstBufferSize = ress.dstBufferSize;
     const size_t blockSize = io_prefs->blockSize;
     size_t readSize;
+    //帧数据获取压缩上下文
     LZ4F_compressionContext_t ctx = ress.ctx;   /* just a pointer */
     LZ4F_preferences_t prefs;
 
@@ -708,15 +709,16 @@ LZ4IO_compressFilename_extRess(cRess_t ress,
 
     /* multiple-blocks file */
     {
-        /* Write Frame Header */
+        /*1 Write Frame Header */
         size_t const headerSize = LZ4F_compressBegin_usingCDict(ctx, dstBuffer, dstBufferSize, ress.cdict, &prefs);
         if (LZ4F_isError(headerSize)) EXM_THROW(33, "File header generation failed : %s", LZ4F_getErrorName(headerSize));
         if (fwrite(dstBuffer, 1, headerSize, dstFile) != headerSize)
             EXM_THROW(34, "Write error : cannot write header");
         compressedfilesize += headerSize;
 
-        /* Main Loop - one block at a time */
+        /*2 Main Loop - one block at a time */
         while (readSize>0) {
+            //loop 压缩
             size_t const outSize = LZ4F_compressUpdate(ctx, dstBuffer, dstBufferSize, srcBuffer, readSize, NULL);
             if (LZ4F_isError(outSize))
                 EXM_THROW(35, "Compression failed : %s", LZ4F_getErrorName(outSize));

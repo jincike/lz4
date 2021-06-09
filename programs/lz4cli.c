@@ -306,7 +306,7 @@ static operationMode_e determineOpMode(const char* inputFilename)
     if (!strcmp(inputFilename+extStart, LZ4_EXTENSION)) return om_decompress;
     else return om_compress;
 }
-
+//main
 int main(int argc, const char** argv)
 {
     int i,
@@ -770,7 +770,7 @@ int main(int argc, const char** argv)
                 assert(ifnIdx <= INT_MAX);
                 operationResult = LZ4IO_compressMultipleFilenames(inFileNames, (int)ifnIdx, comp_extension, cLevel, prefs);
             } else {
-                operationResult = DEFAULT_COMPRESSOR(input_filename, output_filename, cLevel, prefs);
+                operationResult = DEFAULT_COMPRESSOR(input_filename, output_filename, cLevel, prefs);//Ä¬ÈÏÑ¹Ëõ  cLevelÑ¹Ëõ¼¶±ð
     }   }   }
 
 _cleanup:
