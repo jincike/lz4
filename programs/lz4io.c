@@ -690,21 +690,26 @@ LZ4IO_compressFilename_extRess(cRess_t ress,
     if (ferror(srcFile)) EXM_THROW(30, "Error reading %s ", srcFileName);
     filesize += readSize;
 	//LZ4F_compressFrame压缩
-	//{
-	//	unsigned long long tmpcompressedfilesize = 0;
-	//	void* const dstBuffer_ = ress.dstBuffer;
-	//	const size_t dstBufferSize_ = ress.dstBufferSize;
-	//	LZ4F_preferences_t preferencesPtr;
-	//	memset(&preferencesPtr, 0, sizeof(preferencesPtr));
-	//	preferencesPtr.autoFlush = 1;
-	//	preferencesPtr.compressionLevel = 5;
-	//	tmpcompressedfilesize = LZ4F_compressFrame(dstBuffer_, dstBufferSize_, srcBuffer, filesize, &preferencesPtr);
-
-	//	DISPLAYLEVEL(2, "LZ4F_compressFrame Compressed %llu bytes into %llu bytes ==> %.2f%%\n",
-	//		filesize, tmpcompressedfilesize,
-	//		(double)tmpcompressedfilesize / (filesize + !filesize /* avoid division by zero */) * 100);
-	//	fwrite(dstBuffer_, 1, filesize, dstFile);
-	//}
+    {
+        unsigned long long tmpcompressedfilesize = 0;
+        void* const dstBuffer_ = ress.dstBuffer;
+        const size_t dstBufferSize_ = ress.dstBufferSize;
+        LZ4F_preferences_t preferencesPtr;
+        memset(&preferencesPtr, 0, sizeof(preferencesPtr));
+        preferencesPtr.autoFlush = 1;
+        preferencesPtr.compressionLevel = 5;
+        tmpcompressedfilesize = LZ4F_compressFrame(dstBuffer_, dstBufferSize_, srcBuffer, filesize, &preferencesPtr);
+        if (LZ4F_isError(tmpcompressedfilesize))
+        {
+            DISPLAYLEVEL(2, "LZ4F_compressFrame Compressed Failed!! error is:%s\n", LZ4F_getErrorName(tmpcompressedfilesize));
+        }
+        else
+        {
+            DISPLAYLEVEL(2, "LZ4F_compressFrame Compressed %llu bytes into %llu bytes ==> %.2f%%\n",
+                filesize, tmpcompressedfilesize,(double)tmpcompressedfilesize / (filesize + !filesize /* avoid division by zero */) * 100);
+            //fwrite(dstBuffer_, 1, filesize, dstFile);//开启此，则要屏蔽下方的if else
+        }
+	}
     /* single-block file */
     if (readSize < blockSize) {
         /* Compress in single pass */
