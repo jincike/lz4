@@ -309,6 +309,18 @@ static operationMode_e determineOpMode(const char* inputFilename)
 //main
 int main(int argc, const char** argv)
 {
+    //´òÓ¡ÃüÁîĞĞ
+    for (int i = 0;i < argc;i++)
+    {
+        DISPLAYLEVEL(2, "argc:%d,argv:%s,end\n", argc, argv[i]);
+    }
+    ////Ä£ÄâÑ¹ËõÃüÁî
+    //{
+    //    argc = 2;
+    //    argv[0] = "lz4.exe";
+    //    argv[1] = "1.bmp";
+    //}
+    //Ä£Äâ½âÑ¹ÃüÁî
     int i,
         cLevel=1,
         cLevelLast=-10000,

@@ -689,7 +689,22 @@ LZ4IO_compressFilename_extRess(cRess_t ress,
     readSize  = fread(srcBuffer, (size_t)1, blockSize, srcFile);
     if (ferror(srcFile)) EXM_THROW(30, "Error reading %s ", srcFileName);
     filesize += readSize;
+	//LZ4F_compressFrameÑ¹Ëõ
+	//{
+	//	unsigned long long tmpcompressedfilesize = 0;
+	//	void* const dstBuffer_ = ress.dstBuffer;
+	//	const size_t dstBufferSize_ = ress.dstBufferSize;
+	//	LZ4F_preferences_t preferencesPtr;
+	//	memset(&preferencesPtr, 0, sizeof(preferencesPtr));
+	//	preferencesPtr.autoFlush = 1;
+	//	preferencesPtr.compressionLevel = 5;
+	//	tmpcompressedfilesize = LZ4F_compressFrame(dstBuffer_, dstBufferSize_, srcBuffer, filesize, &preferencesPtr);
 
+	//	DISPLAYLEVEL(2, "LZ4F_compressFrame Compressed %llu bytes into %llu bytes ==> %.2f%%\n",
+	//		filesize, tmpcompressedfilesize,
+	//		(double)tmpcompressedfilesize / (filesize + !filesize /* avoid division by zero */) * 100);
+	//	fwrite(dstBuffer_, 1, filesize, dstFile);
+	//}
     /* single-block file */
     if (readSize < blockSize) {
         /* Compress in single pass */
@@ -744,7 +759,7 @@ LZ4IO_compressFilename_extRess(cRess_t ress,
                 EXM_THROW(39, "Write error : cannot write end of frame");
             compressedfilesize += endSize;
     }   }
-
+   
     /* Release file handlers */
     fclose (srcFile);
     if (strcmp(dstFileName,stdoutmark)) fclose (dstFile);  /* do not close stdout */
