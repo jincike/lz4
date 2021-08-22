@@ -64,7 +64,7 @@ extern "C" {
  *           or 0 if compression fails.
  */
 LZ4LIB_API int LZ4_compress_HC (const char* src, char* dst, int srcSize, int dstCapacity, int compressionLevel);
-//和LZ4_decompress_safe配套使用，解决ios解压缩失败的问题，同时LZ4_compress_HC可以传压缩等级。LZ4_compress_HC不要LZ4_compressBound
+//和LZ4_decompress_safe配套使用，解决ios解压缩失败的问题，同时LZ4_compress_HC可以传压缩等级。LZ4_compress_HC需要LZ4_compressBound
 
 /* Note :
  *   Decompression functions are provided within "lz4.h" (BSD license)
